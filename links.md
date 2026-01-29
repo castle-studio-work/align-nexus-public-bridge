@@ -1,4 +1,6 @@
-# 文件直連清單 (根目錄版本)
+# Align Nexus 文件直連清單 (最終版)
+請複製以下連結匯入 NotebookLM：
+
 - [2026-01-27-iii-dai-review.md](https://castle-studio-work.github.io/align-nexus-public-bridge/2026-01-27-iii-dai-review.md)
 - [2026-01-27-iii-dtri.md](https://castle-studio-work.github.io/align-nexus-public-bridge/2026-01-27-iii-dtri.md)
 - [2026-01-27-invent-ai.md](https://castle-studio-work.github.io/align-nexus-public-bridge/2026-01-27-invent-ai.md)
