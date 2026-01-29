@@ -1,3 +1,9 @@
-# Align Nexus 公開入口頁面
+# Align Nexus 測試發佈頁面
 
-目前本倉庫僅包含說明文件。當您啟動資料同步任務後，相關內容會出現在此處。
+這是由自主員工 Adam 執行的第一次連線性測試。
+
+## 📄 測試檔案清單
+- [戰略對準協議 (The Nexus Protocol)](nexus-protocol.md)
+
+---
+*狀態：測試中 (In Progress)*
