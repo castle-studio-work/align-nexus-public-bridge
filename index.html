@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Align Nexus 數據匯入控制台</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f6f8fa; }
+        .card { background: white; border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { border-bottom: 1px solid #d0d7de; padding-bottom: 10px; color: #24292f; }
+        button { background-color: #2ea44f; color: white; border: 1px solid rgba(27,31,36,0.15); border-radius: 6px; padding: 8px 16px; cursor: pointer; font-weight: 500; margin-right: 5px; }
+        button:hover { background-color: #2c974b; }
+        button.secondary { background-color: #f6f8fa; color: #24292f; border: 1px solid #d0d7de; }
+        textarea { width: 100%; height: 200px; font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace; padding: 12px; border: 1px solid #d0d7de; border-radius: 6px; box-sizing: border-box; background: #fdfdfd; }
+        .file-item { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #f0f0f0; }
+        .file-item:hover { background-color: #fbfbfb; }
+        .file-item input { margin-right: 12px; transform: scale(1.2); cursor: pointer; }
+        .file-link { font-size: 0.85em; color: #57606a; margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🛰️ Align Nexus 數據匯入控制台</h1>
+    
+    <div class="card">
+        <h3>1. 選取欲匯入的文件</h3>
+        <div style="margin-bottom: 15px;">
+            <button onclick="selectAll(true)">全部勾選</button>
+            <button class="secondary" onclick="selectAll(false)">取消全選</button>
+        </div>
+        <div id="file-list" style="max-height: 400px; overflow-y: auto;">
+            <!-- 由 JS 生成 -->
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2. 生成匯入清單 (NotebookLM 專用)</h3>
+        <button onclick="generateImportList()" style="width: 100%; padding: 12px; font-size: 1.1em; margin-bottom: 15px;">生成並複製匯入連結</button>
+        <textarea id="import-result" placeholder="選取檔案後點擊上方按鈕，連結將出現在此處..."></textarea>
+    </div>
+
+    <script>
+        const files = ];
+        const baseUrl = "https://castle-studio-work.github.io/align-nexus-public-bridge/";
+        const listContainer = document.getElementById('file-list');
+
+        files.forEach(file => {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <input type="checkbox" class="file-check" value="${baseUrl}${file}">
+                <div style="flex-grow:1; cursor:pointer;" onclick="this.previousElementSibling.click()">
+                    <strong>${file}</strong>
+                    <span class="file-link">${baseUrl}${file}</span>
+                </div>
+            `;
+            listContainer.appendChild(div);
+        });
+
+        function selectAll(val) {
+            document.querySelectorAll('.file-check').forEach(cb => cb.checked = val);
+        }
+
+        function generateImportList() {
+            const selected = Array.from(document.querySelectorAll('.file-check:checked')).map(cb => cb.value);
+            const resultArea = document.getElementById('import-result');
+            resultArea.value = selected.join('\n');
+            resultArea.select();
+            document.execCommand('copy');
+            alert('連結已生成並複製到剪貼簿！共 ' + selected.length + ' 個連結。');
+        }
+    </script>
+</body>
+</html>
