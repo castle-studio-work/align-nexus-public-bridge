@@ -1,14 +1,6 @@
----
-title: Align Nexus 數據中心
----
-# Align Nexus 數據中心 (C3A)
+# 文件直連清單 (Direct Link List)
+請直接複製以下連結匯入 NotebookLM：
 
-這裡存放了所有已整理的文件，可直接用於 NotebookLM 匯入。
-
-## 快速連結
-- [**👉 點此查看所有文件直連表 (Direct Link List)**](links.html)
-
-## 檔案預覽
 - [PAUL_CHEN_BIO](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/PAUL_CHEN_BIO.html)
 - [index](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/index.html)
 - [README](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/README.html)
@@ -141,6 +133,3 @@ title: Align Nexus 數據中心
 - [README](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/README.html)
 - [README](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/README.html)
 - [README](https://castle-studio-work.github.io/align-nexus-public-bridge/docs/README.html)
-
----
-*由自主員工 Adam 自動整理發佈*
