@@ -2,80 +2,54 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Align Nexus 數據匯入控制台</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f6f8fa; }
-        .card { background: white; border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        h1 { border-bottom: 1px solid #d0d7de; padding-bottom: 10px; color: #24292f; }
-        button { background-color: #2ea44f; color: white; border: 1px solid rgba(27,31,36,0.15); border-radius: 6px; padding: 8px 16px; cursor: pointer; font-weight: 500; margin-right: 5px; }
-        button:hover { background-color: #2c974b; }
-        button.secondary { background-color: #f6f8fa; color: #24292f; border: 1px solid #d0d7de; }
-        textarea { width: 100%; height: 200px; font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace; padding: 12px; border: 1px solid #d0d7de; border-radius: 6px; box-sizing: border-box; background: #fdfdfd; }
-        .file-item { display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #f0f0f0; }
-        .file-item:hover { background-color: #fbfbfb; }
-        .file-item input { margin-right: 12px; transform: scale(1.2); cursor: pointer; }
-        .file-link { font-size: 0.85em; color: #57606a; margin-left: 10px; }
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.5; }
+        .card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .file-item { padding: 8px 0; border-bottom: 1px solid #eee; }
+        button { padding: 10px 20px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px; }
+        textarea { width: 100%; height: 150px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>🛰️ Align Nexus 數據匯入控制台</h1>
+    <h1>🚀 Align Nexus 數據匯入控制台</h1>
     
     <div class="card">
-        <h3>1. 選取欲匯入的文件</h3>
-        <div style="margin-bottom: 15px;">
-            <button onclick="selectAll(true)">全部勾選</button>
-            <button class="secondary" onclick="selectAll(false)">取消全選</button>
+        <h3>1. 勾選檔案</h3>
+        <div>
+            <button onclick="selectAll(true)" style="background:#666">全部勾選</button>
+            <button onclick="selectAll(false)" style="background:#999">取消全選</button>
         </div>
-        <div id="file-list" style="max-height: 400px; overflow-y: auto;">
-            <!-- 由 JS 生成 -->
-        </div>
+        <div id="list" style="margin-top:20px;"></div>
     </div>
 
     <div class="card">
-        <h3>2. 生成匯入清單 (NotebookLM 專用)</h3>
-        <button onclick="generateImportList()" style="width: 100%; padding: 12px; font-size: 1.1em; margin-bottom: 15px;">生成並複製匯入連結</button>
-        <textarea id="import-result" placeholder="選取檔案後點擊上方按鈕，連結將出現在此處..."></textarea>
+        <h3>2. 生成清單</h3>
+        <button onclick="generate()">生成匯入連結</button>
+        <textarea id="output" readonly></textarea>
     </div>
 
     <script>
         const files = ["2026-01-27-iii-dai-review.md","2026-01-27-iii-dtri.md","2026-01-27-invent-ai.md","2026-01-28-kuen-yu-review.md","ISSUE_TEMPLATE.md","PAUL_CHEN_BIO.md","README.md","SKILL.md","_data.md","batch_2_research.md","batch_3_research.md","cloudflare-deploy.md","consolidated_resumes.md","cover_letter.md","general-issue-template.md","interview_prep.md","intro.md","job_description.md","n8n_vs_agent_architecture.md","prep.md","pull_request_template.md","research.md","resume.md","self_intro_article.md","self_intro_speech.md","social_media_recruitment.md"];
-        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-        const listContainer = document.getElementById('file-list');
+        const baseUrl = "https://castle-studio-work.github.io/align-nexus-public-bridge/";
+        const container = document.getElementById('list');
 
-        if (files.length === 0) {
-            listContainer.innerHTML = '<p style="color:red;">未找到任何 Markdown 檔案。</p>';
-        } else {
-            files.forEach(file => {
-                const div = document.createElement('div');
-                div.className = 'file-item';
-                div.innerHTML = `
-                    <input type="checkbox" class="file-check" value="${baseUrl}${file}">
-                    <div style="flex-grow:1; cursor:pointer;" onclick="const cb = this.previousElementSibling; cb.checked = !cb.checked;">
-                        <strong>${file}</strong>
-                        <span class="file-link">${baseUrl}${file}</span>
-                    </div>
-                `;
-                listContainer.appendChild(div);
-            });
+        // 強制渲染列表
+        files.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = '<label><input type="checkbox" class="chk" value="' + baseUrl + f + '"> <b>' + f + '</b></label>';
+            container.appendChild(item);
+        });
+
+        function selectAll(b) {
+            document.querySelectorAll('.chk').forEach(c => c.checked = b);
         }
 
-        function selectAll(val) {
-            document.querySelectorAll('.file-check').forEach(cb => cb.checked = val);
-        }
-
-        function generateImportList() {
-            const selected = Array.from(document.querySelectorAll('.file-check:checked')).map(cb => cb.value);
-            const resultArea = document.getElementById('import-result');
-            resultArea.value = selected.join('\n');
-            resultArea.select();
-            
-            try {
-                document.execCommand('copy');
-                alert('連結已生成並複製到剪貼簿！共 ' + selected.length + ' 個連結。');
-            } catch (err) {
-                alert('連結已生成，但自動複製失敗，請手動複製文字方塊中的內容。');
-            }
+        function generate() {
+            const selected = Array.from(document.querySelectorAll('.chk:checked')).map(c => c.value);
+            document.getElementById('output').value = selected.join('\n');
+            alert('已生成 ' + selected.length + ' 個連結，請從下方方塊複製。');
         }
     </script>
 </body>
